@@ -27,6 +27,7 @@ export default function Home() {
       {photos && photos.map(photo => (
         <div key={photo.id}>
           <Image src={`data:image/jpeg;base64,${photo.imageData}`} width={200} height={200} alt={photo.name} />
+          <h3>Name: ${photo.name}</h3>
         </div>
       ))}
       <div>
