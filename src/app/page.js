@@ -9,11 +9,18 @@ import { UploadPhoto } from '@/components/uploadPhoto/UploadPhoto'
 export default function Home() {
   const [photos, setPhotos] = useState([])
   const [addPhoto, setAddPhoto] = useState(false)
+  const [error, setError] = useState(null)
 
   function fetchData() {
     fetch("http://localhost:5273/photos")
-      .then(response => response.json())
-      .then(data => setPhotos(data))
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Unable to fetch data. Please try again later.")
+        }
+        return response.json()
+      })
+      .then(data => setPhotos(data), setError(null))
+      .catch(error => setError(error), console.log(error))
   }
 
   useEffect(() => {
@@ -23,6 +30,13 @@ export default function Home() {
   return (
     <main className="container mx-auto">
       <h1 className="text-5xl">Melos Facial Recognition</h1>
+
+      {error && (
+        <div className="text-red-500">
+          <h2>Error</h2>
+          <p>Please try again later.</p>
+        </div>
+      )}
 
       {photos && photos.map(photo => (
         <div key={photo.id}>
